@@ -1,0 +1,141 @@
+#include <iostream>
+using namespace std;
+
+// Board class to manage the Tic-Tac-Toe grid
+class Board {
+private:
+    char grid[3][3]; // 3x3 grid for Tic-Tac-Toe
+public:
+    Board() { // Constructor to initialize board
+        resetBoard();
+    }
+
+    void resetBoard() { // Reset the board
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                grid[i][j] = '1' + (i * 3 + j); // Assign numbers 1-9
+    }
+
+    void displayBoard() { // Display the board
+        cout << "\n";
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                cout << " " << grid[i][j] << " ";
+                if (j < 2) cout << "|";
+            }
+            cout << "\n";
+            if (i < 2) cout << "---|---|---\n";
+        }
+        cout << "\n";
+    }
+
+    bool updateBoard(int position, char symbol) { // Update board with player's move
+        int row = (position - 1) / 3;
+        int col = (position - 1) % 3;
+
+        if (grid[row][col] != 'X' && grid[row][col] != 'O') {
+            grid[row][col] = symbol;
+            return true;
+        }
+        return false; // Invalid move
+    }
+
+    char checkWin() { // Check if there is a winner
+        // Check rows and columns
+        for (int i = 0; i < 3; i++) {
+            if (grid[i][0] == grid[i][1] && grid[i][1] == grid[i][2]) return grid[i][0];
+            if (grid[0][i] == grid[1][i] && grid[1][i] == grid[2][i]) return grid[0][i];
+        }
+        // Check diagonals
+        if (grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2]) return grid[0][0];
+        if (grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0]) return grid[0][2];
+
+        return ' '; // No winner yet
+    }
+
+    bool isFull() { // Check if board is full (for a draw)
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (grid[i][j] != 'X' && grid[i][j] != 'O') return false;
+        return true;
+    }
+};
+
+// Player class to manage player details
+class Player {
+public:
+    string name;
+    char symbol;
+
+    Player(string n, char s) {
+        name = n;
+        symbol = s;
+    }
+
+    int makeMove() {
+        int position;
+        cout << name << " (" << symbol << "), enter your move (1-9): ";
+        cin >> position;
+        return position;
+    }
+};
+
+// Game class to control the flow of the game
+class Game {
+private:
+    Board board;
+    Player player1, player2;
+    Player* currentPlayer;
+
+public:
+    Game(string name1, string name2) : player1(name1, 'X'), player2(name2, 'O') {
+        currentPlayer = &player1;
+    }
+
+    void switchPlayer() { // Switch turns
+        currentPlayer = (currentPlayer == &player1) ? &player2 : &player1;
+    }
+
+    void play() {
+        cout << "Welcome to Tic-Tac-Toe!\n";
+        board.displayBoard();
+
+        while (true) {
+            int position;
+            while (true) { // Loop until a valid move is entered
+                position = currentPlayer->makeMove();
+                if (position >= 1 && position <= 9 && board.updateBoard(position, currentPlayer->symbol)) {
+                    break;
+                }
+                cout << "Invalid move. Try again.\n";
+            }
+
+            board.displayBoard();
+
+            char winner = board.checkWin();
+            if (winner != ' ') { // If there is a winner
+                cout << currentPlayer->name << " wins! Congratulations!\n";
+                break;
+            }
+            if (board.isFull()) { // If the board is full (Draw)
+                cout << "It's a draw!\n";
+                break;
+            }
+
+            switchPlayer(); // Switch to the next player
+        }
+    }
+};
+
+int main() {
+    string name1, name2;
+    cout << "Enter Player 1 name: ";
+    cin >> name1;
+    cout << "Enter Player 2 name: ";
+    cin >> name2;
+
+    Game game(name1, name2);
+    game.play();
+
+    return 0;
+}
