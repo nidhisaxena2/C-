@@ -11,7 +11,7 @@ string getResponse(const string& userInput) {
         {"hi", "Hi there! What can I do for you?"},
         {"how are you", "I'm just a chatbot, but I'm doing great!"},
         {"what is your name", "I'm a simple AI chatbot created in C++!"},
-        {"who created you", "I was created by a C++ enthusiast like you!"},
+        {"who created you", "I was created by Nidhi"},
         {"bye", "Goodbye! Have a great day!"},
         {"thanks", "You're welcome! Glad to help."}
     };
