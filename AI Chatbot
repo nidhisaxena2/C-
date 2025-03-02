@@ -1,0 +1,49 @@
+#include <iostream>
+#include <string>
+#include <unordered_map>
+
+using namespace std;
+
+// Function to get chatbot response
+string getResponse(const string& userInput) {
+    unordered_map<string, string> responses = {
+        {"hello", "Hello! How can I assist you today?"},
+        {"hi", "Hi there! What can I do for you?"},
+        {"how are you", "I'm just a chatbot, but I'm doing great!"},
+        {"what is your name", "I'm a simple AI chatbot created in C++!"},
+        {"who created you", "I was created by a C++ enthusiast like you!"},
+        {"bye", "Goodbye! Have a great day!"},
+        {"thanks", "You're welcome! Glad to help."}
+    };
+
+    // Convert user input to lowercase for case-insensitive matching
+    string lowerInput = userInput;
+    for (char &c : lowerInput) c = tolower(c);
+
+    // Check if input matches predefined responses
+    if (responses.find(lowerInput) != responses.end()) {
+        return responses[lowerInput];
+    } else {
+        return "I'm not sure how to respond to that. Can you ask something else?";
+    }
+}
+
+int main() {
+    cout << "Simple AI Chatbot (Type 'exit' to end the chat)\n";
+    
+    string userInput;
+    
+    while (true) {
+        cout << "You: ";
+        getline(cin, userInput);
+
+        if (userInput == "exit") {
+            cout << "Chatbot: Goodbye! Have a nice day!\n";
+            break;
+        }
+
+        cout << "Chatbot: " << getResponse(userInput) << endl;
+    }
+
+    return 0;
+}
